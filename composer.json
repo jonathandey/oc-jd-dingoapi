@@ -1,0 +1,9 @@
+{
+    "require": {
+		"dingo/api": "1.0.*@dev",
+		"tymon/jwt-auth": "^0.5.9",
+		"illuminate/cache": "5.1.*",
+		"illuminate/contracts": "5.1.*",
+		"illuminate/support": "5.1.*"
+    }
+}
