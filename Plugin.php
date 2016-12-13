@@ -3,7 +3,9 @@
 use Backend;
 use RainLab\User\Models\User;
 use System\Classes\PluginBase;
+use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Foundation\AliasLoader;
+use Tymon\JWTAuth\Middleware\RefreshToken;
 
 /**
  * DingoApi Plugin Information File
@@ -41,8 +43,6 @@ class Plugin extends PluginBase
             return \JD\DingoApi\Classes\AuthManager::instance();
         });
 
-        $this->app->singleton('jwt.refresh', 'Tymon\JWTAuth\Middleware\RefreshToken');
-
         $alias = AliasLoader::getInstance();
         $alias->alias('JWTAuth', \Tymon\JWTAuth\Facades\JWTAuth::class);
         $alias->alias('JWTFactory', \Tymon\JWTAuth\Facades\JWTFactory::class);
@@ -58,6 +58,9 @@ class Plugin extends PluginBase
      */
     public function boot()
     {
+        $this->app['router']->middleware('jwt.auth', '\Tymon\JWTAuth\Middleware\GetUserFromToken');
+        $this->app['router']->middleware('jwt.refresh', '\Tymon\JWTAuth\Middleware\RefreshToken');
+
         $this->app['Dingo\Api\Auth\Auth']->extend('jwt', function ($app) {
             return new \Dingo\Api\Auth\Provider\JWT($app['Tymon\JWTAuth\JWTAuth']);
         });

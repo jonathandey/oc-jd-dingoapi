@@ -32,7 +32,8 @@ $api->version('v1', function ($api) {
 
 	// Go to /api/user/details?token={token_from_auth/token}
 	// Returns user details from auth token
-	$api->get('user/details', ['middleware' => ['api.auth'], function() {
+	// jwt.refresh requires jwt.auth for the refresh token to work
+	$api->get('user/details', ['middleware' => ['jwt.refresh', 'jwt.auth', 'api.auth'], function() {
 		return $user = JWTAuth::parseToken()->toUser();
 	}]);
 });
