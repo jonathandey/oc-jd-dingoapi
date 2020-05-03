@@ -3,7 +3,7 @@
 namespace JD\DingoApi\Providers\Auth;
 
 use RainLab\User\Classes\AuthManager;
-use Illuminate\Foundation\Application;
+use October\Rain\Foundation\Application;
 use Tymon\JWTAuth\Providers\Auth\IlluminateAuthAdapter as IlluminateAuthAdapterBase;
 
 class IlluminateAuthAdapter extends IlluminateAuthAdapterBase {

@@ -6,7 +6,7 @@ use RainLab\User\Classes\AuthManager as AuthManagerBase;
 
 class AuthManager extends AuthManagerBase {
 
-	public function once(array $credentials)
+	public function once(array $credentials = [])
 	{
 		$user = $this->authenticate($credentials, false);
 
@@ -30,7 +30,7 @@ class AuthManager extends AuthManagerBase {
 
 	public function byId($id)
 	{
-		dd('over here');
+		return $this->findUserById($id);
 	}
 
 }

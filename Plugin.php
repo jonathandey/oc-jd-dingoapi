@@ -1,5 +1,6 @@
 <?php namespace JD\DingoApi;
 
+use Config;
 use Backend;
 use RainLab\User\Models\User;
 use System\Classes\PluginBase;
@@ -36,9 +37,12 @@ class Plugin extends PluginBase
      */
     public function register()
     {
+        $this->app['config']['jwt'] = require __DIR__ . '/config/jwt.php';
+        $this->app['config']['api'] = require __DIR__ . '/config/api.php';
+
         $this->app->register(\Dingo\Api\Provider\LaravelServiceProvider::class);
         $this->app->register(\Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class);
-        
+
         $this->app->singleton('jd.dingoapi.auth', function() {
             return \JD\DingoApi\Classes\AuthManager::instance();
         });
@@ -46,9 +50,6 @@ class Plugin extends PluginBase
         $alias = AliasLoader::getInstance();
         $alias->alias('JWTAuth', \Tymon\JWTAuth\Facades\JWTAuth::class);
         $alias->alias('JWTFactory', \Tymon\JWTAuth\Facades\JWTFactory::class);
-
-        $this->app['config']['jwt'] = require __DIR__ . '/config/jwt.php';
-        $this->app['config']['api'] = require __DIR__ . '/config/api.php';
     }
 
     /**
@@ -58,8 +59,8 @@ class Plugin extends PluginBase
      */
     public function boot()
     {
-        $this->app['router']->middleware('jwt.auth', '\Tymon\JWTAuth\Middleware\GetUserFromToken');
-        $this->app['router']->middleware('jwt.refresh', '\Tymon\JWTAuth\Middleware\RefreshToken');
+        $this->app['router']->aliasMiddleware('jwt.auth', '\Tymon\JWTAuth\Middleware\GetUserFromToken');
+        $this->app['router']->aliasMiddleware('jwt.refresh', '\Tymon\JWTAuth\Middleware\RefreshToken');
 
         $this->app['Dingo\Api\Auth\Auth']->extend('jwt', function ($app) {
             return new \Dingo\Api\Auth\Provider\JWT($app['Tymon\JWTAuth\JWTAuth']);
